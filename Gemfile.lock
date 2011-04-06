@@ -1,0 +1,18 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    mustache (0.99.2)
+    rake (0.8.7)
+    rdiscount (1.6.8)
+    rocco (0.6)
+      mustache
+      rdiscount
+    watchr (0.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rake
+  rocco (~> 0.6)
+  watchr (~> 0.7)
