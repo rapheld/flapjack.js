@@ -8,7 +8,7 @@ describe('A Flapjack', function() {
               '  <li value="12">Brie</option>' +
               '  <li value="27">Camembert</option>' +
               '  <li value="98">Parmesan</option>' +
-              '</ul>'
+              '</ul>';
     setFixtures(fixture);
     expect(function() {
       new Flapjack('#cheeses');
@@ -20,7 +20,7 @@ describe('A Flapjack', function() {
               '  <option value="12">Brie</option>' +
               '  <option value="27">Camembert</option>' +
               '  <option value="98">Parmesan</option>' +
-              '</select>'
+              '</select>';
 
     beforeEach(function() {
       setFixtures(fixture);
@@ -45,7 +45,7 @@ describe('A Flapjack', function() {
               '  </optgroup>' +
               '  <optgroup label="Hard">' +
               '    <option value="98">Parmesan</option>' +
-              '</select>'
+              '</select>';
 
     beforeEach(function() {
       setFixtures(fixture);
@@ -72,7 +72,7 @@ describe('A Flapjack', function() {
               '  <option value="12">Soft - Brie</option>' +
               '  <option value="27">Soft - Camembert</option>' +
               '  <option value="98">Hard - Parmesan</option>' +
-              '</select>'
+              '</select>';
 
     beforeEach(function() {
       setFixtures(fixture);
