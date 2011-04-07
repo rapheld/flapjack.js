@@ -1,4 +1,4 @@
-## flapjacks.js
+## flapjack.js
 ### A jQuery-based combobox plus hierarchical navigation
 
 ### User Stories
