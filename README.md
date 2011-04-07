@@ -51,6 +51,7 @@ where `from`, `to`, and `selected` are of the following form:
     {
       parent:     the parent node if present,
       text:       the text to display in the list,
+      value:      the value used for form submission,
       fullText(): the text to display in the text box when the dropdown closes,
       element:    the DOM node representing this element (likely an `li`)
     }
