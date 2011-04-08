@@ -33,12 +33,12 @@ describe('A Flapjack', function() {
     });
 
     it('should have a leaf for each option', function() {
-      expect(flapjack.root[0].text).toEqual('Brie');
-      expect(flapjack.root[0].value).toEqual('12');
-      expect(flapjack.root[1].text).toEqual('Camembert');
-      expect(flapjack.root[1].value).toEqual('27');
-      expect(flapjack.root[2].text).toEqual('Parmesan');
-      expect(flapjack.root[2].value).toEqual('98');
+      expect(flapjack[0].text).toEqual('Brie');
+      expect(flapjack[0].value).toEqual('12');
+      expect(flapjack[1].text).toEqual('Camembert');
+      expect(flapjack[1].value).toEqual('27');
+      expect(flapjack[2].text).toEqual('Parmesan');
+      expect(flapjack[2].value).toEqual('98');
     });
   });
 
@@ -58,17 +58,17 @@ describe('A Flapjack', function() {
     });
 
     it('should have a group for each optgroup', function() {
-      expect(flapjack.root[0].text).toEqual('Soft');
-      expect(flapjack.root[1].text).toEqual('Hard');
+      expect(flapjack[0].text).toEqual('Soft');
+      expect(flapjack[1].text).toEqual('Hard');
     });
 
     it('should have a leaf for each option', function() {
-      expect(flapjack.root[0][0].text).toEqual('Brie');
-      expect(flapjack.root[0][0].value).toEqual('12');
-      expect(flapjack.root[0][1].text).toEqual('Camembert');
-      expect(flapjack.root[0][1].value).toEqual('27');
-      expect(flapjack.root[1][0].text).toEqual('Parmesan');
-      expect(flapjack.root[1][0].value).toEqual('98');
+      expect(flapjack[0][0].text).toEqual('Brie');
+      expect(flapjack[0][0].value).toEqual('12');
+      expect(flapjack[0][1].text).toEqual('Camembert');
+      expect(flapjack[0][1].value).toEqual('27');
+      expect(flapjack[1][0].text).toEqual('Parmesan');
+      expect(flapjack[1][0].value).toEqual('98');
     });
   });
 
@@ -86,7 +86,7 @@ describe('A Flapjack', function() {
         $select.find('option').each(function() {
           var $element = $(this);
           var nesting = $element.text().split(' - ');
-          var group = fj.findOrCreateGroup(nesting[0]);
+          var group = fj.findOrCreateGroup({ text: nesting[0] });
           group.push(new Flapjack.Leaf({
             text: nesting[1],
             value: $element.attr('value')
@@ -97,17 +97,17 @@ describe('A Flapjack', function() {
     });
 
     it('should have a group for each optgroup', function() {
-      expect(flapjack.root[0].text).toEqual('Soft');
-      expect(flapjack.root[1].text).toEqual('Hard');
+      expect(flapjack[0].text).toEqual('Soft');
+      expect(flapjack[1].text).toEqual('Hard');
     });
 
     it('should have a leaf for each option', function() {
-      expect(flapjack.root[0][0].text).toEqual('Brie');
-      expect(flapjack.root[0][0].value).toEqual('12');
-      expect(flapjack.root[0][1].text).toEqual('Camembert');
-      expect(flapjack.root[0][1].value).toEqual('27');
-      expect(flapjack.root[1][0].text).toEqual('Parmesan');
-      expect(flapjack.root[1][0].value).toEqual('98');
+      expect(flapjack[0][0].text).toEqual('Brie');
+      expect(flapjack[0][0].value).toEqual('12');
+      expect(flapjack[0][1].text).toEqual('Camembert');
+      expect(flapjack[0][1].value).toEqual('27');
+      expect(flapjack[1][0].text).toEqual('Parmesan');
+      expect(flapjack[1][0].value).toEqual('98');
     });
   });
 
