@@ -62,6 +62,11 @@ describe('A Flapjack', function() {
       expect(flapjack[1].text).toEqual('Hard');
     });
 
+    it('should assign the Flapjack as the parent of the top-level groups', function() {
+      expect(flapjack[0].parent).toEqual(flapjack);
+      expect(flapjack[1].parent).toEqual(flapjack);
+    });
+
     it('should have a leaf for each option', function() {
       expect(flapjack[0][0].text).toEqual('Brie');
       expect(flapjack[0][0].value).toEqual('12');
