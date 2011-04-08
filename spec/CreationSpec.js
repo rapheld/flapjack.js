@@ -81,12 +81,13 @@ describe('A Flapjack', function() {
 
     beforeEach(function() {
       setFixtures(fixture);
-      flapjack = new Flapjack('#cheeses', { parser: function($select, fj) {
+      flapjack = new Flapjack('#cheeses', { parseSelect: function($select) {
+        var fj = this;
         var result = [];
         $select.find('option').each(function() {
           var $element = $(this);
           var nesting = $element.text().split(' - ');
-          var group = fj.findOrCreateGroup({ text: nesting[0] });
+          var group = fj.findOrCreateGroup(nesting[0]);
           group.push(new Flapjack.Leaf({
             text: nesting[1],
             value: $element.attr('value')
