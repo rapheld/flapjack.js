@@ -40,6 +40,12 @@ describe('A Flapjack', function() {
       expect(flapjack[2].text).toEqual('Parmesan');
       expect(flapjack[2].value).toEqual('98');
     });
+
+    it('should assign the Flapjack as the parent of the leaves', function() {
+      expect(flapjack[0].parent).toEqual(flapjack);
+      expect(flapjack[1].parent).toEqual(flapjack);
+      expect(flapjack[2].parent).toEqual(flapjack);
+    });
   });
 
   describe('built from a select with optgroups', function() {
@@ -74,6 +80,12 @@ describe('A Flapjack', function() {
       expect(flapjack[0][1].value).toEqual('27');
       expect(flapjack[1][0].text).toEqual('Parmesan');
       expect(flapjack[1][0].value).toEqual('98');
+    });
+
+    it('should assign the proper group as the parent of the leaves', function() {
+      expect(flapjack[0][0].parent).toEqual(flapjack[0]);
+      expect(flapjack[0][1].parent).toEqual(flapjack[0]);
+      expect(flapjack[1][0].parent).toEqual(flapjack[1]);
     });
   });
 
