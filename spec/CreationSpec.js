@@ -81,13 +81,18 @@ describe('A Flapjack', function() {
 
     beforeEach(function() {
       setFixtures(fixture);
-      flapjack = new Flapjack('#cheeses', { parser: function(fj, $element) {
-        var nesting = $element.text().split(' - ');
-        var group = fj.findOrCreateGroup(nesting[0]);
-        group.add(new Flapjack.Leaf({
-          text: nesting[1],
-          value: $element.attr('value')
-        }));
+      flapjack = new Flapjack('#cheeses', { parser: function($select, fj) {
+        var result = [];
+        $select.find('option').each(function() {
+          var $element = $(this);
+          var nesting = $element.text().split(' - ');
+          var group = fj.findOrCreateGroup(nesting[0]);
+          group.push(new Flapjack.Leaf({
+            text: nesting[1],
+            value: $element.attr('value')
+          }));
+        });
+        return result;
       }});
     });
 
