@@ -1,26 +1,31 @@
 describe('A Flapjack', function() {
 
-  var fixture = "";
   var flapjack = null;
 
-  it('should not be able to be built from something other than a select', function() {
-    fixture = '<ul id="cheeses>"' +
-              '  <li value="12">Brie</option>' +
-              '  <li value="27">Camembert</option>' +
-              '  <li value="98">Parmesan</option>' +
-              '</ul>';
-    setFixtures(fixture);
-    expect(function() {
-      new Flapjack('#cheeses');
-    }).toThrow();
+  describe('for something other than a select', function() {
+    var fixture = '<ul id="cheeses">' +
+                  '  <li value="12">Brie</option>' +
+                  '  <li value="27">Camembert</option>' +
+                  '  <li value="98">Parmesan</option>' +
+                  '</ul>';
+
+    beforeEach(function() {
+      setFixtures(fixture);
+    });
+
+    it('should fail', function() {
+      expect(function() {
+        new Flapjack('#cheeses');
+      }).toThrow();
+    });
   });
 
   describe('built from a select with options', function() {
-    fixture = '<select id="cheeses>"' +
-              '  <option value="12">Brie</option>' +
-              '  <option value="27">Camembert</option>' +
-              '  <option value="98">Parmesan</option>' +
-              '</select>';
+    var fixture = '<select id="cheeses">' +
+                  '  <option value="12">Brie</option>' +
+                  '  <option value="27">Camembert</option>' +
+                  '  <option value="98">Parmesan</option>' +
+                  '</select>';
 
     beforeEach(function() {
       setFixtures(fixture);
@@ -38,14 +43,14 @@ describe('A Flapjack', function() {
   });
 
   describe('built from a select with optgroups', function() {
-    fixture = '<select id="cheeses>"' +
-              '  <optgroup label="Soft">' +
-              '    <option value="12">Brie</option>' +
-              '    <option value="27">Camembert</option>' +
-              '  </optgroup>' +
-              '  <optgroup label="Hard">' +
-              '    <option value="98">Parmesan</option>' +
-              '</select>';
+    var fixture = '<select id="cheeses">' +
+                  '  <optgroup label="Soft">' +
+                  '    <option value="12">Brie</option>' +
+                  '    <option value="27">Camembert</option>' +
+                  '  </optgroup>' +
+                  '  <optgroup label="Hard">' +
+                  '    <option value="98">Parmesan</option>' +
+                  '</select>';
 
     beforeEach(function() {
       setFixtures(fixture);
@@ -68,11 +73,11 @@ describe('A Flapjack', function() {
   });
 
   describe('built with a custom parser', function() {
-    fixture = '<select id="cheeses>"' +
-              '  <option value="12">Soft - Brie</option>' +
-              '  <option value="27">Soft - Camembert</option>' +
-              '  <option value="98">Hard - Parmesan</option>' +
-              '</select>';
+    var fixture = '<select id="cheeses">' +
+                  '  <option value="12">Soft - Brie</option>' +
+                  '  <option value="27">Soft - Camembert</option>' +
+                  '  <option value="98">Hard - Parmesan</option>' +
+                  '</select>';
 
     beforeEach(function() {
       setFixtures(fixture);
