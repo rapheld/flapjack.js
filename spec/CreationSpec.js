@@ -32,6 +32,10 @@ describe('A Flapjack', function() {
       flapjack = new Flapjack('#cheeses');
     });
 
+    it('should have a reference to the select', function() {
+      expect(flapjack.$select[0]).toEqual($('#cheeses')[0]);
+    });
+
     it('should have a leaf for each option', function() {
       expect(flapjack[0].text).toEqual('Brie');
       expect(flapjack[0].value).toEqual('12');
