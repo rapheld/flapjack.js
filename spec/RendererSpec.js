@@ -49,6 +49,14 @@ describe('The Flapjack renderer', function() {
       expect(hardCheeses.first().text()).toEqual('Parmesan');
     });
 
+    it('should attach the underlying Flapjack objects to the DOM elements', function() {
+      var root = $('#cheesesContainer > ol.flapjack');
+
+      expect(root.find('> li:first-child > a').data('flapjack-group')).toEqual(flapjack.findOrCreateGroup('Soft'));
+
+      expect(root.find('> li:last-child li a').data('flapjack-leaf')).toEqual(flapjack.findOrCreateGroup('Hard')[0]);
+    });
+
   });
 
 });
