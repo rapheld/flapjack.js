@@ -49,6 +49,11 @@ describe('The Flapjack renderer', function() {
       expect(hardCheeses.first().text()).toEqual('Parmesan');
     });
 
+    it('should set the root node as shown initially', function() {
+      expect($('#cheesesContainer > ol.flapjack')).toHaveClass('fj-active');
+      expect($('#cheesesContainer li ol')).not.toHaveClass('jf-active');
+    });
+
     it('should attach the underlying Flapjack objects to the DOM elements', function() {
       var root = $('#cheesesContainer > ol.flapjack');
 
