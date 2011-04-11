@@ -29,9 +29,10 @@ describe('The Flapjack renderer', function() {
       expect($('#cheesesContainer input[type="search"]').length).toEqual(1);
     });
 
-    it('should create a tree of ordered lists', function() {
+    it('should create a hidden tree of ordered lists', function() {
       var root = $('#cheesesContainer > ol.flapjack');
       expect(root.length).toEqual(1);
+      expect(root).toBeHidden();
 
       var groups = root.find('> li');
       expect(groups.length).toEqual(2);
