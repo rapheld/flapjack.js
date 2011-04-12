@@ -1,0 +1,23 @@
+ol.fj-active {
+  border: 1px solid;
+}
+
+ol.flapjack {
+  margin: 0;
+  padding: 0;
+}
+
+ol.flapjack li {
+  list-style-type: none;
+  margin: 0;
+  padding: 6px;
+}
+
+ol.flapjack li + li {
+  border-top: 1px solid;
+}
+
+/* hide nested menus */
+.fj-active ol { display: none; }
+
+.flapjack a { cursor: pointer; }
