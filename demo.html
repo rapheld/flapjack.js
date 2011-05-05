@@ -14,9 +14,15 @@
     <script src="spec/support/jquery-ui-116acb4cb28c4a091.js"></script>
     <script src="spec/support/jquery-ui-no-back-compat.js"></script>
     <script src="lib/flapjack.js" charset="utf-8"></script>
-    <style>    
-      .ui-button { margin-left: -1px; }
-      .ui-button-icon-only .ui-button-text, .ui-autocomplete-input { margin: 0; padding: 0.35em; }
+    <style>
+      .ui-button { margin: 0 0 0 -1px; }
+      .ui-button-icon-only .ui-button-text, .ui-autocomplete-input, .flapjack-input { padding: 7px; }
+      .ui-button-icon-only .ui-button-text, .ui-autocomplete-input { margin: 0; }
+      .ui-button .ui-button-text { line-height: 1.25em; }
+      .flapjack-controls { display: block; }
+      .flapjack-input { width: 250px; }
+      .flapjack-menu, .flapjack-menu ul { padding: 2px; width: 260px; }
+      .flapjack-menu { position: absolute; }
     </style>
   </head>
   <body>
