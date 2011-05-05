@@ -21,8 +21,8 @@
       .ui-button .ui-button-text { line-height: 1.25em; }
       .flapjack-controls { display: block; }
       .flapjack-input { width: 250px; }
-      .flapjack-menu, .flapjack-menu ul { padding: 2px; width: 260px; }
-      .flapjack-menu { position: absolute; }
+      .flapjack-menu, .flapjack-menu ul { height: 200px; padding: 2px; width: 260px; }
+      .flapjack-menu { overflow: hidden; position: absolute; }
     </style>
   </head>
   <body>
@@ -37,9 +37,15 @@
       <li>
         <a>Eggs</a>
         <ul>
-          <li><a>Western Omelette</a></li>
           <li><a>Two eggs and toast</a></li>
           <li><a>Two eggs, meat, and toast</a></li>
+          <li>
+            <a>Omelettes</a>
+            <ul>
+              <li><a>Western</a></li>
+              <li><a>Mushroom</a></li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
