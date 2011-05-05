@@ -1,26 +1,12 @@
 describe('A Flapjack', function() {
 
-  var flapjack = null;
+  var flapjack = null, // the flapjack widget instance
+      menu     = null, // the menu widget instance
+      $input   = null, // the search input
+      $button  = null, // the combobox button
+      $list    = null; // the original <ul>
 
-  describe('for something other than a select', function() {
-    var fixture = '<ul id="cheeses">' +
-                  '  <li value="12">Brie</option>' +
-                  '  <li value="27">Camembert</option>' +
-                  '  <li value="98">Parmesan</option>' +
-                  '</ul>';
-
-    beforeEach(function() {
-      setFixtures(fixture);
-    });
-
-    it('should fail', function() {
-      expect(function() {
-        new Flapjack('#cheeses');
-      }).toThrow();
-    });
-  });
-
-  describe('built from a select with options', function() {
+  describe('for something other than an unordered list', function() {
     var fixture = '<select id="cheeses">' +
                   '  <option value="12">Brie</option>' +
                   '  <option value="27">Camembert</option>' +
@@ -29,107 +15,56 @@ describe('A Flapjack', function() {
 
     beforeEach(function() {
       setFixtures(fixture);
-      flapjack = new Flapjack('#cheeses');
     });
 
-    it('should have a reference to the select', function() {
-      expect(flapjack.$select[0]).toEqual($('#cheeses')[0]);
-    });
-
-    it('should have a leaf for each option', function() {
-      expect(flapjack[0].text).toEqual('Brie');
-      expect(flapjack[0].value).toEqual('12');
-      expect(flapjack[1].text).toEqual('Camembert');
-      expect(flapjack[1].value).toEqual('27');
-      expect(flapjack[2].text).toEqual('Parmesan');
-      expect(flapjack[2].value).toEqual('98');
-    });
-
-    it('should assign the Flapjack as the parent of the leaves', function() {
-      expect(flapjack[0].parent).toEqual(flapjack);
-      expect(flapjack[1].parent).toEqual(flapjack);
-      expect(flapjack[2].parent).toEqual(flapjack);
+    it('should fail', function() {
+      expect(function() {
+        $('#cheeses').flapjack();
+      }).toThrow();
     });
   });
 
-  describe('built from a select with optgroups', function() {
-    var fixture = '<select id="cheeses">' +
-                  '  <optgroup label="Soft">' +
-                  '    <option value="12">Brie</option>' +
-                  '    <option value="27">Camembert</option>' +
-                  '  </optgroup>' +
-                  '  <optgroup label="Hard">' +
-                  '    <option value="98">Parmesan</option>' +
-                  '</select>';
+  describe('built from nested unordered lists', function() {
+    var fixture = '<ul id="cheeses">' +
+                  '  <li>' +
+                  '    <a>Soft</a>' +
+                  '    <ul>' +
+                  '      <li><a>Brie</a></option>' +
+                  '      <li><a>Camembert</a></option>' +
+                  '    </ul>'
+                  '  <li>' +
+                  '    <a>Hard</a>' +
+                  '    <ul>' +
+                  '      <li><a>Parmesan</a></option>' +
+                  '    </ul>' +
+                  '  </li>' +
+                  '</ul>';
 
     beforeEach(function() {
       setFixtures(fixture);
-      flapjack = new Flapjack('#cheeses');
+      $list    = $('#cheeses').flapjack();
+      flapjack = $list.data('flapjack');
+      menu     = $list.data('menu');
+      $input   = $list.prevAll('input[type="text"]').first();
+      $button  = $list.prevAll('button').first();
     });
 
-    it('should have a group for each optgroup', function() {
-      expect(flapjack[0].text).toEqual('Soft');
-      expect(flapjack[1].text).toEqual('Hard');
+    it('should have a reference to the list', function() {
+      expect(flapjack.$list[0]).toEqual($list[0]);
     });
 
-    it('should assign the Flapjack as the parent of the top-level groups', function() {
-      expect(flapjack[0].parent).toEqual(flapjack);
-      expect(flapjack[1].parent).toEqual(flapjack);
+    it('should hide the list', function() {
+      expect($list).not.toBeVisible();
     });
 
-    it('should have a leaf for each option', function() {
-      expect(flapjack[0][0].text).toEqual('Brie');
-      expect(flapjack[0][0].value).toEqual('12');
-      expect(flapjack[0][1].text).toEqual('Camembert');
-      expect(flapjack[0][1].value).toEqual('27');
-      expect(flapjack[1][0].text).toEqual('Parmesan');
-      expect(flapjack[1][0].value).toEqual('98');
+    it('should create a text input', function() {
+      expect($input).toBeVisible();
+      expect(flapjack.$input[0]).toEqual($input[0]);
     });
 
-    it('should assign the proper group as the parent of the leaves', function() {
-      expect(flapjack[0][0].parent).toEqual(flapjack[0]);
-      expect(flapjack[0][1].parent).toEqual(flapjack[0]);
-      expect(flapjack[1][0].parent).toEqual(flapjack[1]);
-    });
-  });
-
-  describe('built with a custom parser', function() {
-    var fixture = '<select id="cheeses">' +
-                  '  <option value="12">Soft - Brie</option>' +
-                  '  <option value="27">Soft - Camembert</option>' +
-                  '  <option value="98">Hard - Parmesan</option>' +
-                  '</select>';
-
-    beforeEach(function() {
-      setFixtures(fixture);
-      flapjack = new Flapjack('#cheeses', { parseSelect: function($select) {
-        var fj = this;
-        var result = [];
-        $select.find('option').each(function() {
-          var $element = $(this);
-          var nesting = $element.text().split(' - ');
-          var group = fj.findOrCreateGroup(nesting[0]);
-          group.push(new Flapjack.Leaf({
-            text: nesting[1],
-            value: $element.attr('value')
-          }));
-        });
-        return result;
-      }});
-    });
-
-    it('should have a group for each optgroup', function() {
-      expect(flapjack[0].text).toEqual('Soft');
-      expect(flapjack[1].text).toEqual('Hard');
-    });
-
-    it('should have a leaf for each option', function() {
-      expect(flapjack[0][0].text).toEqual('Brie');
-      expect(flapjack[0][0].value).toEqual('12');
-      expect(flapjack[0][1].text).toEqual('Camembert');
-      expect(flapjack[0][1].value).toEqual('27');
-      expect(flapjack[1][0].text).toEqual('Parmesan');
-      expect(flapjack[1][0].value).toEqual('98');
+    it('should create a button', function() {
+      expect($button).toBeVisible();
+      expect(flapjack.$button[0]).toEqual($button[0]);
     });
   });
 
