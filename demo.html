@@ -75,11 +75,14 @@
 
     <script>
       $(function() {
-        var $order = $('order');
+        var $order = $('#order');
         $('#breakfast-menu')
           .flapjack()
-          .bind('flapjack-select', function($a) {
-            $('<li>' + $a.text() + '</li>').appendTo($order);
+          .bind('flapjackselect', function(event, ui) {
+            if (ui && ui.item) {
+              var $a = ui.item.find('> a');
+              $('<li>' + $a.text() + '</li>').appendTo($order);
+            }
           });
       });
     </script>
