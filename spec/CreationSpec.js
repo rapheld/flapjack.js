@@ -45,8 +45,8 @@ describe('A Flapjack', function() {
       $list    = $('#cheeses').flapjack();
       flapjack = $list.data('flapjack');
       menu     = $list.data('menu');
-      $input   = $list.prevAll('input[type="text"]').first();
-      $button  = $list.prevAll('button').first();
+      $input   = $list.prev().find('input[type="text"]').first();
+      $button  = $list.prev().find('button').first();
     });
 
     it('should have a reference to the list', function() {
