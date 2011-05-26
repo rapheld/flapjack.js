@@ -1,23 +1,10 @@
-ol.fj-active {
-  border: 1px solid;
-}
-
-ol.flapjack {
-  margin: 0;
-  padding: 0;
-}
-
-ol.flapjack li {
-  list-style-type: none;
-  margin: 0;
-  padding: 6px;
-}
-
-ol.flapjack li + li {
-  border-top: 1px solid;
-}
-
-/* hide nested menus */
-.fj-active ol { display: none; }
-
-.flapjack a { cursor: pointer; }
+.flapjack-controls .ui-button { margin: 0 0 0 -1px; }
+.flapjack-controls .ui-button-icon-only .ui-button-text, .flapjack-controls .ui-autocomplete-input, .flapjack-input { padding: 7px; }
+.flapjack-controls .ui-button-icon-only .ui-button-text, .flapjack-controls .ui-autocomplete-input { margin: 0; }
+.flapjack-controls .ui-button .ui-button-text { line-height: 1.25em; }
+.flapjack-controls { display: block; }
+.flapjack-input { width: 250px; }
+.flapjack-menu, .flapjack-menu ul { background: #fff; height: 200px; padding: 2px; width: 260px; }
+.flapjack-menu { overflow: hidden; position: absolute; }
+.flapjack-menu.ui-menu-icons .ui-menu-item a { position: inherit; }
+.flapjack-menu .ui-menu-item a { cursor: pointer; }
