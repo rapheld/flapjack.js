@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>flapjack.js</title>
+  <link rel="stylesheet" href="http://github.com/jashkenas/docco/raw/0.3.0/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>flapjack.js</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="cm">/*globals document, clearTimeout, setTimeout*/</span>
+<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Flapjack'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Flapjack">&#182;</a>
+        </div>
+        <h1>Flapjack</h1>
+
+<p>A jQuery-UI widget that turns an unordered list into a combobox
+with iOS-style nested menus.</p>
+
+<h2>Requirements</h2>
+
+<p>An <code>&lt;ul&gt;</code> of the following form:</p>
+
+<pre><code>&lt;ul&gt;
+  &lt;li&gt;
+    &lt;a&gt;Cats&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a&gt;Garfield&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a&gt;Simba&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a&gt;Dogs&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a&gt;Odie&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a&gt;Lassie&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<h2>Options</h2>
+
+<p>The following options can be passed to the <code>.flapjack()</code> call:</p>
+
+<ul>
+<li><code>renderBackButtons</code> &mdash; whether or not to insert back buttons in each
+sub-list. Defaults to <code>true</code></li>
+<li><code>backText</code> &mdash; the text to use for the back buttons. Defaults
+to &ldquo;Back&rdquo;.</li>
+<li><code>slideDuration</code> &mdash; the length of time, in milliseconds, it takes
+to slide in or out a menu. Defaults to 400.</li>
+</ul>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Helper_Functions'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Helper_Functions">&#182;</a>
+        </div>
+        <h2>Helper Functions</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Insert_Back_Buttons'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Insert_Back_Buttons">&#182;</a>
+        </div>
+        <h3>Insert Back Buttons</h3>
+
+<p>The function that inserts back buttons in each nested list.
+See also <code>renderBackButtons</code> and <code>backText</code> options, above.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="kd">function</span> <span class="nx">insertBackButtons</span><span class="p">(</span> <span class="nx">$list</span><span class="p">,</span> <span class="nx">backText</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$list</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span> <span class="s1">&#39;li ul&#39;</span> <span class="p">).</span><span class="nx">prepend</span><span class="p">(</span>
+      <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;li&gt;&#39;</span> <span class="o">+</span>
+         <span class="s1">&#39;  &lt;span class=&quot;ui-icon ui-icon-carat-1-w&quot;&gt;&lt;/span&gt;&#39;</span> <span class="o">+</span>
+         <span class="s1">&#39;  &lt;a href=&quot;#menu-back&quot; class=&quot;flapjack-back-link&quot;&gt;&#39;</span> <span class="o">+</span>
+              <span class="nx">backText</span> <span class="o">+</span>
+         <span class="s1">&#39;  &lt;/a&gt;&#39;</span> <span class="o">+</span>
+         <span class="s1">&#39;&lt;/li&gt;&#39;</span>
+      <span class="p">)</span> <span class="p">);</span>
+  <span class="p">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Default_Search_function.'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Default_Search_function.">&#182;</a>
+        </div>
+        <h3>Default Search function.</h3>
+
+<p>A search function must take two arguments &mdash; a String term and
+a Flapjack widget instance &mdash; and return a collection of <code>&lt;li&gt;</code>
+elements to be added to the search results list element. The default
+implementation looks for leaf nodes (other than &ldquo;Back&rdquo; buttons) that
+have text matching the search term and sorts by the index of the match.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="kd">function</span> <span class="nx">defaultSearch</span><span class="p">(</span> <span class="nx">term</span><span class="p">,</span> <span class="nx">flapjack</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">flapjack</span><span class="p">.</span><span class="nx">$list</span>
+            <span class="p">.</span><span class="nx">find</span><span class="p">(</span> <span class="s1">&#39;li&#39;</span> <span class="p">)</span>
+            <span class="p">.</span><span class="nx">not</span><span class="p">(</span> <span class="s1">&#39;:has( ol, ul, .flapjack-back-link )&#39;</span> <span class="p">)</span>
+            <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">li</span> <span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="p">[</span> <span class="nx">li</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">li</span><span class="p">).</span><span class="nx">text</span><span class="p">().</span><span class="nx">indexOf</span><span class="p">(</span> <span class="nx">term</span> <span class="p">)</span> <span class="p">];</span>
+            <span class="p">})</span>
+            <span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">liAndIndexOfTerm</span> <span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="nx">liAndIndexOfTerm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="p">})</span>
+            <span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span> <span class="nx">firstLiAndIndexOfTerm</span><span class="p">,</span> <span class="nx">secondLiAndIndexOfTerm</span> <span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="nx">firstLiAndIndexOfTerm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">secondLiAndIndexOfTerm</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+            <span class="p">})</span>
+            <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">liAndIndexOfTerm</span> <span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="nx">liAndIndexOfTerm</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">clone</span><span class="p">();</span>
+            <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">$</span><span class="p">.</span><span class="nx">widget</span><span class="p">(</span> <span class="s2">&quot;ui.flapjack&quot;</span><span class="p">,</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Default_options'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Default_options">&#182;</a>
+        </div>
+        <h2>Default options</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">renderBackButtons</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nx">backText</span><span class="o">:</span> <span class="s1">&#39;Back&#39;</span><span class="p">,</span>
+      <span class="nx">slideDuration</span><span class="o">:</span> <span class="mi">400</span> <span class="c1">// in milliseconds</span>
+    <span class="p">},</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Internal_properties'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Internal_properties">&#182;</a>
+        </div>
+        <h2>Internal properties</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">_isMenuPositioned</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Public_Methods'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Public_Methods">&#182;</a>
+        </div>
+        <h2>Public Methods</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-&lt;code&gt;#showMenu&lt;/code&gt;'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-&lt;code&gt;#showMenu&lt;/code&gt;">&#182;</a>
+        </div>
+        <h3><code>#showMenu</code></h3>
+
+<p>Shows the navigable menu.</p>
+
+<p>Usage:</p>
+
+<pre><code>$('ul#flapjack').flapjack('showMenu');
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">showMenu</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+      <span class="nx">$</span><span class="p">(</span> <span class="nb">document</span> <span class="p">).</span><span class="nx">one</span><span class="p">(</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">self</span><span class="p">.</span><span class="nx">hideMenu</span><span class="p">();</span>
+      <span class="p">});</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>Only position the list once. If we reposition every time the
+button is clicked, the list marches down the page.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_isMenuPositioned</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_isMenuPositioned</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">$list</span><span class="p">.</span><span class="nx">position</span><span class="p">({</span>
+          <span class="nx">my</span><span class="o">:</span> <span class="s1">&#39;left top&#39;</span><span class="p">,</span>
+          <span class="nx">at</span><span class="o">:</span> <span class="s1">&#39;left bottom&#39;</span><span class="p">,</span>
+          <span class="nx">of</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">$controls</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$list</span><span class="p">.</span><span class="nx">show</span><span class="p">().</span><span class="nx">focus</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-&lt;code&gt;#hideMenu&lt;/code&gt;'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-&lt;code&gt;#hideMenu&lt;/code&gt;">&#182;</a>
+        </div>
+        <h3><code>#hideMenu</code></h3>
+
+<p>Hides the navigable menu.</p>
+
+<p>Usage:</p>
+
+<pre><code>$('ul#flapjack').flapjack('hideMenu');
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">hideMenu</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$list</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-&lt;code&gt;#toggleMenu&lt;/code&gt;'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-&lt;code&gt;#toggleMenu&lt;/code&gt;">&#182;</a>
+        </div>
+        <h3><code>#toggleMenu</code></h3>
+
+<p>Toggles the visibility of the menu. Accepts an optional argument
+which is the desired visibility.</p>
+
+<p>Usage:</p>
+
+<pre><code>// hide it if it's visible; show it if it's not:
+$('ul#flapjack').flapjack('toggleMenu');
+
+// show it if someFunction() evaluates to true; hide it otherwise:
+$('ul#flapjack').flapjack('toggleMenu', someFunction());
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">toggleMenu</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">desiredVisibility</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">desiredVisibility</span> <span class="o">===</span> <span class="kc">undefined</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">desiredVisibility</span> <span class="o">=</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">$list</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span> <span class="s1">&#39;:visible&#39;</span> <span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">desiredVisibility</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">showMenu</span><span class="p">()</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">hideMenu</span><span class="p">();</span>
+    <span class="p">},</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-&lt;code&gt;#destroy&lt;/code&gt;'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-&lt;code&gt;#destroy&lt;/code&gt;">&#182;</a>
+        </div>
+        <h3><code>#destroy</code></h3>
+
+<p>Destroy the widget and clean up any created DOM elements.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">destroy</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$list</span>   <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">$list</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$input</span>  <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">$input</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$button</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">$button</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">menu</span>    <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">menu</span><span class="p">.</span><span class="nx">destroy</span><span class="p">();</span>
+      <span class="nx">$</span><span class="p">.</span><span class="nx">Widget</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">destroy</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="k">this</span> <span class="p">);</span>
+    <span class="p">},</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Widget_Initialization'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Widget_Initialization">&#182;</a>
+        </div>
+        <h2>Widget Initialization</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-15'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-15">&#182;</a>
+        </div>
+        <p>Initialize a Flapjack on a list.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">_create</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">isList</span> <span class="o">=</span> <span class="p">(</span> <span class="sr">/^[ou]l$/i</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">element</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span> <span class="s1">&#39;nodeName&#39;</span> <span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="nx">isList</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Flapjack may only be used on a list element&#39;</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="kd">var</span> <span class="nx">flapjack</span>  <span class="o">=</span> <span class="k">this</span><span class="p">;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Public_Properties_on_the_Flapjack_widget:'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Public_Properties_on_the_Flapjack_widget:">&#182;</a>
+        </div>
+        <h3>Public Properties on the Flapjack widget:</h3>
+
+<p><code>$list</code> &mdash; the original <code>&lt;ol&gt;</code> or <code>&lt;ul&gt;</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="kd">var</span> <span class="nx">$list</span>     <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$list</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">element</span><span class="p">;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-17'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-17">&#182;</a>
+        </div>
+        <p><code>$controls</code> &mdash; a <code>&lt;span&gt;</code> containing the search <code>&lt;input&gt;</code> and combobox <code>&lt;button&gt;</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="kd">var</span> <span class="nx">$controls</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$controls</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;span class=&quot;flapjack-controls&quot;&gt;&lt;/span&gt;&#39;</span> <span class="p">).</span><span class="nx">insertBefore</span><span class="p">(</span> <span class="nx">$list</span> <span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-18'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-18">&#182;</a>
+        </div>
+        <p><code>$input</code> &mdash; the search <code>&lt;input&gt;</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="kd">var</span> <span class="nx">$input</span>    <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$input</span>  <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;input&gt;&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;text&#39;</span> <span class="p">}</span> <span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">$controls</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-19'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-19">&#182;</a>
+        </div>
+        <p><code>$button</code> &mdash; the combobox <code>&lt;button&gt;</code> that shows the menu</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="kd">var</span> <span class="nx">$button</span>   <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s2">&quot;&lt;button type=&#39;button&#39;&gt;&amp;nbsp;&lt;/button&gt;&quot;</span> <span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">$controls</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">flapjack</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">renderBackButtons</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">insertBackButtons</span><span class="p">(</span> <span class="nx">$list</span><span class="p">,</span> <span class="nx">flapjack</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">backText</span> <span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="nx">$list</span>
+        <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span> <span class="s2">&quot;flapjack-menu&quot;</span> <span class="p">)</span>
+        <span class="p">.</span><span class="nx">menu</span><span class="p">({</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-20'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-20">&#182;</a>
+        </div>
+        <p>When a submenu shows up, place it just to the right
+of the current menu. Later, we&rsquo;ll slide it into view.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>          <span class="nx">position</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">my</span><span class="o">:</span> <span class="s1">&#39;left top&#39;</span><span class="p">,</span>
+            <span class="nx">at</span><span class="o">:</span> <span class="s1">&#39;right top&#39;</span><span class="p">,</span>
+            <span class="nx">of</span><span class="o">:</span> <span class="nx">$list</span>
+          <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+
+      <span class="kd">var</span> <span class="nx">menu</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">menu</span> <span class="o">=</span> <span class="nx">$list</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span> <span class="s1">&#39;menu&#39;</span> <span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-21'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-21">&#182;</a>
+        </div>
+        <p>don&rsquo;t open submenus on hover</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="nx">menu</span><span class="p">.</span><span class="nx">_startOpening</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">clearTimeout</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">timer</span><span class="p">);</span>
+      <span class="p">};</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-22'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-22">&#182;</a>
+        </div>
+        <p>clicking on an item that has a submenu opens it</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="nx">menu</span><span class="p">.</span><span class="nx">select</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">event</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">ui</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">item</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">active</span> <span class="p">};</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-23'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-23">&#182;</a>
+        </div>
+        <p>if you selected &ldquo;back&rdquo;, go back:</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>        <span class="k">if</span> <span class="p">(</span> <span class="nx">ui</span> <span class="o">&amp;&amp;</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span> <span class="o">&amp;&amp;</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span> <span class="s1">&#39;&gt; .flapjack-back-link&#39;</span> <span class="p">).</span><span class="nx">length</span> <span class="p">)</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-24'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-24">&#182;</a>
+        </div>
+        <p>ui.menu expects the selected item to currently be in-focus:</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>          <span class="nx">menu</span><span class="p">.</span><span class="nx">focus</span><span class="p">(</span> <span class="nx">event</span><span class="p">,</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span> <span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="nx">menu</span><span class="p">.</span><span class="nx">left</span><span class="p">(</span> <span class="nx">event</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nx">event</span><span class="p">.</span><span class="nx">stopImmediatePropagation</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-25'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-25">&#182;</a>
+        </div>
+        <p>if you selected something with children, show the children:</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="nx">ui</span> <span class="o">&amp;&amp;</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span> <span class="o">&amp;&amp;</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span> <span class="s1">&#39;&gt; ul&#39;</span> <span class="p">).</span><span class="nx">length</span> <span class="p">)</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-26'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-26">&#182;</a>
+        </div>
+        <p>ui.menu expects the selected item to currently be in-focus:</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>          <span class="nx">menu</span><span class="p">.</span><span class="nx">focus</span><span class="p">(</span> <span class="nx">event</span><span class="p">,</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">item</span> <span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="nx">menu</span><span class="p">.</span><span class="nx">right</span><span class="p">(</span> <span class="nx">event</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nx">event</span><span class="p">.</span><span class="nx">stopImmediatePropagation</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-27'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-27">&#182;</a>
+        </div>
+        <p>fire a selected event and hide the list:</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">menu</span><span class="p">.</span><span class="nx">closeAll</span><span class="p">();</span>
+          <span class="nx">$list</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+          <span class="nx">flapjack</span><span class="p">.</span><span class="nx">_trigger</span><span class="p">(</span> <span class="s1">&#39;select&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">,</span> <span class="nx">ui</span> <span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+
+      <span class="kd">var</span> <span class="nx">menuOpenWithoutSliding</span> <span class="o">=</span> <span class="nx">menu</span><span class="p">.</span><span class="nx">_open</span><span class="p">;</span>
+      <span class="nx">menu</span><span class="p">.</span><span class="nx">_open</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">submenu</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">menuOpenWithoutSliding</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="nx">submenu</span> <span class="p">);</span>
+        <span class="nx">submenu</span><span class="p">.</span><span class="nx">animate</span><span class="p">({</span>
+          <span class="nx">left</span><span class="o">:</span> <span class="mi">0</span>
+        <span class="p">},</span> <span class="nx">flapjack</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">slideDuration</span><span class="p">);</span>
+      <span class="p">};</span>
+
+      <span class="nx">menu</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">newItem</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">active</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">active</span><span class="p">.</span><span class="nx">parents</span><span class="p">(</span><span class="s2">&quot;li:not(.ui-menubar-item)&quot;</span><span class="p">).</span><span class="nx">first</span><span class="p">(),</span>
+            <span class="nx">self</span>    <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+            <span class="nx">parent</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">newItem</span> <span class="o">&amp;&amp;</span> <span class="nx">newItem</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">parent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">active</span><span class="p">.</span><span class="nx">parent</span><span class="p">();</span>
+          <span class="nx">parent</span>
+            <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;aria-hidden&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;aria-expanded&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">animate</span><span class="p">({</span>
+              <span class="nx">left</span><span class="o">:</span> <span class="nx">$list</span><span class="p">.</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;width&#39;</span><span class="p">)</span>
+            <span class="p">},</span> <span class="nx">flapjack</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">slideDuration</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+              <span class="nx">parent</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+              <span class="nx">self</span><span class="p">.</span><span class="nx">focus</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">newItem</span><span class="p">);</span>
+            <span class="p">});</span>
+          <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+
+      <span class="kd">var</span> <span class="nx">downArrow</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+
+      <span class="nx">$input</span>
+        <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span> <span class="s2">&quot;ui-widget ui-widget-content ui-corner-left ui-autocomplete-input flapjack-input&quot;</span> <span class="p">)</span>
+        <span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;keyup.flapjack&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">event</span> <span class="o">&amp;&amp;</span> <span class="nx">event</span><span class="p">.</span><span class="nx">which</span> <span class="o">===</span> <span class="nx">downArrow</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">flapjack</span><span class="p">.</span><span class="nx">showMenu</span><span class="p">();</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+
+      <span class="nx">$button</span>
+        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s2">&quot;tabIndex&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">)</span>
+        <span class="p">.</span><span class="nx">button</span><span class="p">({</span>
+          <span class="nx">icons</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;ui-icon-triangle-1-s&quot;</span>
+          <span class="p">},</span>
+          <span class="nx">text</span><span class="o">:</span> <span class="kc">false</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span> <span class="s2">&quot;ui-corner-all&quot;</span> <span class="p">)</span>
+        <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span> <span class="s2">&quot;ui-corner-right ui-button-icon&quot;</span> <span class="p">)</span>
+        <span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="nx">$</span><span class="p">(</span> <span class="k">this</span> <span class="p">).</span><span class="nx">blur</span><span class="p">();</span>
+          <span class="nx">flapjack</span><span class="p">.</span><span class="nx">toggleMenu</span><span class="p">();</span>
+          <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+
+  <span class="p">}</span> <span class="p">);</span>
+
+<span class="p">}(</span><span class="k">this</span><span class="p">.</span><span class="nx">jQuery</span><span class="p">));</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
